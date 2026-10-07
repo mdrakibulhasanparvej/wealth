@@ -1,56 +1,142 @@
-# Welcome to your Expo app 👋
+# Welth 💰
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A personal finance / money-management mobile app built with **Expo** and **React Native**. Track income & expenses, manage transactions, and chat with an AI assistant — all from a clean, modern UI.
 
-## Get started
+> **Status:** 🚧 In early development. All screens are built with a polished UI, but data is currently mocked and Clerk authentication is scaffolded (not fully wired yet).
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## ✨ Features
 
-2. Start the app
+- **🔐 Authentication** — Sign in / Sign up screens with email + password, password strength meter, show/hide password, and social login buttons (Google/Apple — UI only for now), powered by [Clerk](https://clerk.com).
+- **🏠 Home Dashboard** — Greeting header, total balance card (balance / income / expense), quick actions, and recent transactions.
+- **📋 Transactions** — Income/expense summary, search, filter chips (All / Income / Expense), and transactions grouped by date (Today / Yesterday / This Week).
+- **➕ Add Transaction** — Expense/Income toggle, large decimal amount input, category chips (Food, Transport, Shopping, Bills, Fun, Health, Salary, Other), and notes.
+- **🤖 AI Assistant** — Chat interface with message bubbles, typing indicator, and suggestion chips ("Analyze my spending", "Create a budget", etc.). Demo replies for now — real API integration planned.
+- **👤 Profile** — User stats (transactions / budgets / goals), grouped settings (Account, Preferences, Support), and logout.
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## 🛠 Tech Stack
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+| Layer | Technology |
+|---|---|
+| Framework | [Expo SDK 57](https://docs.expo.dev/) (React Native 0.86, React 19) |
+| Routing | [Expo Router](https://docs.expo.dev/router/introduction) (file-based, typed routes) |
+| Auth | [Clerk](https://clerk.com) (`@clerk/expo`) with `expo-secure-store` token cache |
+| Styling | [NativeWind v4](https://nativewind.dev/) (Tailwind CSS) |
+| Forms / Validation | `react-hook-form` + `zod` (installed, coming soon) |
+| Animation | `react-native-reanimated` + `react-native-gesture-handler` |
+| Language | TypeScript (strict mode) |
+| Linting | ESLint (`eslint-config-expo`) |
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+## 📁 Project Structure
 
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+v3/
+├── app/                        # Expo Router routes (file-based routing)
+│   ├── _layout.tsx             # Root layout: ClerkProvider + Stack
+│   ├── index.tsx               # "/" — auth gate (redirects based on sign-in state)
+│   ├── (auth)/
+│   │   ├── _layout.tsx         # Auth guard (signed-out → signIn, signed-in → /)
+│   │   ├── signIn.tsx          # Sign-in screen
+│   │   └── signUp.tsx          # Sign-up screen
+│   └── (root)/
+│       ├── _layout.tsx         # Stack (headers hidden)
+│       └── (tabs)/
+│           ├── _layout.tsx     # Tab bar (iOS: NativeTabs, Android/Web: Tabs)
+│           ├── index.tsx       # 🏠 Home dashboard
+│           ├── transaction.tsx # 📋 Transactions list
+│           ├── addTransaction.tsx # ➕ Add transaction form
+│           ├── assistant.tsx   # 🤖 AI assistant chat
+│           └── profile.tsx     # 👤 Profile & settings
+├── assets/                     # Icons, splash screen, tab icons
+├── app.json                    # Expo config (name, scheme, plugins)
+├── tailwind.config.js          # NativeWind preset
+├── babel.config.js             # NativeWind + Reanimated babel plugins
+├── metro.config.js             # NativeWind Metro integration
+└── global.css                  # Tailwind base styles
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Routes
 
-### Other setup steps
+| Path | Screen |
+|---|---|
+| `/` | Auth gate (redirect) |
+| `/signIn` | Sign in |
+| `/signUp` | Sign up |
+| `/` (tabs) | Home |
+| `/transaction` | Transactions |
+| `/addTransaction` | Add transaction |
+| `/assistant` | AI Assistant |
+| `/profile` | Profile |
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+---
 
-## Learn more
+## 🚀 Getting Started
 
-To learn more about developing your project with Expo, look at the following resources:
+### Prerequisites
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- Node.js 20+
+- npm (or your preferred package manager)
+- The [Expo Go](https://expo.dev/go) app on your phone, or an iOS Simulator / Android Emulator
 
-## Join the community
+### 1. Install dependencies
 
-Join our community of developers creating universal apps.
+```bash
+npm install
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### 2. Set up environment variables
+
+Create a `.env` file in the project root:
+
+```env
+EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_clerk_publishable_key_here
+```
+
+> Get a free publishable key from your [Clerk dashboard](https://dashboard.clerk.com). The app **will throw an error** on startup if this is missing.
+
+### 3. Start the dev server
+
+```bash
+npx expo start
+```
+
+Then scan the QR code with Expo Go, or press `i` / `a` to launch the iOS Simulator / Android Emulator.
+
+---
+
+## 📜 Available Scripts
+
+| Command | Description |
+|---|---|
+| `npm start` | Start the Expo dev server |
+| `npm run android` | Start and open on Android |
+| `npm run ios` | Start and open on iOS |
+| `npm run web` | Start and open in the browser |
+| `npm run lint` | Run ESLint |
+| `npx tsc --noEmit` | TypeScript type-checking |
+| `npx expo-doctor` | Diagnose dependency & config issues |
+
+---
+
+## 🗺 Roadmap
+
+- [x] Project scaffold & tab navigation
+- [x] UI for all core screens (Home, Transactions, Add, Assistant, Profile)
+- [ ] Wire up Clerk authentication (sign-in / sign-up / logout)
+- [ ] Persist transactions (backend / local database)
+- [ ] Real AI assistant API integration
+- [ ] Budgets & savings goals
+- [ ] Charts & spending analytics
+- [ ] Push notifications
+- [ ] EAS build & submission (`eas build`, `eas submit`)
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License — see [LICENSE](./LICENSE) for details.
